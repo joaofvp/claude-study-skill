@@ -1,0 +1,18 @@
+{
+  "obsidian": {
+    "baseUrl": "https://127.0.0.1:27124",
+    "apiKey": "SUA_API_KEY_AQUI",
+    "insecure": true
+  },
+  "vault": {
+    "studyPath": "Study",
+    "dailyPath": "Study/Daily",
+    "conceptsPath": "Study/Concepts",
+    "sessionsPath": "Study/Sessions",
+    "indexPath": "Study/concepts_index.json",
+    "mocPath": "Study/MOC - Mapa de Estudos.md"
+  },
+  "language": "pt-BR",
+  "includeTechnicalTerms": true,
+  "profile": "dev-em-formacao"
+}
