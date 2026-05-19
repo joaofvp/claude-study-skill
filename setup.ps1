@@ -4,7 +4,7 @@
 #   .\setup.ps1
 #
 # Ou baixando direto:
-#   irm https://raw.githubusercontent.com/SEU_USER/claude-study-skill/main/setup.ps1 | iex
+#   irm https://raw.githubusercontent.com/joaofvp/claude-study-skill/main/setup.ps1 | iex
 #
 
 $ErrorActionPreference = "Stop"

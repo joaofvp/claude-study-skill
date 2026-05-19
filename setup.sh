@@ -8,7 +8,7 @@
 #   ./setup.sh
 #
 # Ou em uma linha:
-#   bash <(curl -sL https://raw.githubusercontent.com/SEU_USER/claude-study-skill/main/setup.sh)
+#   bash <(curl -sL https://raw.githubusercontent.com/joaofvp/claude-study-skill/main/setup.sh)
 #
 
 set -e

@@ -29,14 +29,14 @@ Study/
 ### Opcao 1: Clone + setup (recomendado)
 
 ```bash
-git clone https://github.com/SEU_USER/claude-study-skill.git
+git clone https://github.com/joaofvp/claude-study-skill.git
 cd claude-study-skill
 bash setup.sh
 ```
 
 No Windows PowerShell:
 ```powershell
-git clone https://github.com/SEU_USER/claude-study-skill.git
+git clone https://github.com/joaofvp/claude-study-skill.git
 cd claude-study-skill
 .\setup.ps1
 ```
