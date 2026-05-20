@@ -4,6 +4,11 @@
     "apiKey": "SUA_API_KEY_AQUI",
     "insecure": true
   },
+  "proxy": {
+    "enabled": false,
+    "baseUrl": "https://obsidian-capture.joaof-capture.workers.dev/obsidian",
+    "apiKey": "SUA_PROXY_API_KEY_AQUI"
+  },
   "vault": {
     "studyPath": "Study",
     "dailyPath": "Study/Daily",

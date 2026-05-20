@@ -24,13 +24,31 @@ Leia o arquivo de configuração:
 ~/.claude/obsidian-study-config.json
 ```
 
-Use os valores de `obsidian.baseUrl`, `obsidian.apiKey` e `vault.*` em todas as chamadas à API.
+### Modo de conexão
 
-Defina as variáveis no shell:
+O config tem duas seções: `obsidian` (local) e `proxy` (remoto).
+
+**Se `proxy.enabled` é `true`** (trabalho / fora de casa):
+```bash
+API_KEY="<valor de proxy.apiKey>"
+BASE_URL="<valor de proxy.baseUrl>"
+# Exemplo: BASE_URL="https://obsidian-capture.joaof-capture.workers.dev/obsidian"
+# As chamadas vão: /obsidian/vault/... → Worker → tunnel → Obsidian
+```
+
+**Se `proxy.enabled` é `false`** (casa / Obsidian local):
 ```bash
 API_KEY="<valor de obsidian.apiKey>"
 BASE_URL="<valor de obsidian.baseUrl>"
+# Exemplo: BASE_URL="https://127.0.0.1:27124"
 ```
+
+Em ambos os casos, o padrão de chamada é o mesmo:
+```bash
+curl -sk -H "Authorization: Bearer $API_KEY" "$BASE_URL/vault/Study/..."
+```
+
+A **diferença é só no config** — o resto da skill funciona idêntico.
 
 ## REGRA CRÍTICA DE ENCODING
 
