@@ -2,11 +2,18 @@
 
 ## O que foi feito
 
-Foi criada uma skill do Claude Code chamada `/study` que analisa conversas e gera notas de estudo automáticas no Obsidian do PC de casa. O acesso remoto funciona via Cloudflare Worker (proxy autenticado) + Cloudflare Tunnel.
+Foram criadas DUAS skills do Claude Code que geram notas de estudo no Obsidian do PC de casa:
 
-A conexão já foi testada e está funcionando: `curl.exe` no proxy retorna as pastas do vault.
+| Skill | Como ativa | O que faz |
+|---|---|---|
+| **`/study`** (manual) | Usuario digita `/study` | Analise completa: conceitos + sessao + daily digest + MOC + perguntas de revisao |
+| **`auto-study`** (automatica) | Claude detecta tarefa tecnica completada | Captura leve: so conceitos novos + daily digest. Sem sessao, sem MOC |
 
-## O que você precisa fazer
+No Obsidian, as notas geradas pela captura automatica tem a tag `#auto-capture`. As notas do `/study` manual tem a tag `#manual-capture`. Assim voce consegue filtrar no Obsidian o que foi capturado de cada forma.
+
+O acesso remoto funciona via Cloudflare Worker (proxy autenticado) + Cloudflare Tunnel.
+
+## O que voce precisa fazer
 
 ### Passo 1: Clonar o repo e rodar o setup
 
@@ -18,12 +25,19 @@ cd claude-study-skill
 ```
 
 O setup vai pedir:
-- **API Key:** digite qualquer coisa (ex: `x`). Não será usada.
-- **Porta:** aperte Enter (padrão 27124). Não será usada.
+- **API Key:** digite qualquer coisa (ex: `x`). Nao sera usada.
+- **Porta:** aperte Enter (padrao 27124). Nao sera usada.
 
-O que importa é que ele cria `~/.claude/skills/study/SKILL.md`.
+O que importa e que ele cria `~/.claude/skills/study/SKILL.md`.
 
-### Passo 2: Configurar o modo proxy
+### Passo 2: Instalar a skill de auto-capture
+
+```powershell
+mkdir -Force "$HOME\.claude\skills\auto-study"
+Copy-Item "auto-study-SKILL.md" "$HOME\.claude\skills\auto-study\SKILL.md"
+```
+
+### Passo 3: Configurar o modo proxy
 
 Abra o arquivo de config:
 
@@ -31,7 +45,7 @@ Abra o arquivo de config:
 notepad $HOME\.claude\obsidian-study-config.json
 ```
 
-Apague todo o conteúdo e cole isso no lugar:
+Apague todo o conteudo e cole isso no lugar:
 
 ```
 {
@@ -61,25 +75,45 @@ Apague todo o conteúdo e cole isso no lugar:
 
 Salve e feche o notepad.
 
-O campo importante é `"proxy": { "enabled": true }` — isso diz pra skill usar o Worker ao invés do localhost.
+O campo importante e `"proxy": { "enabled": true }` — isso diz pra skill usar o Worker ao inves do localhost.
 
-### Passo 3: Reiniciar o Claude Code
+### Passo 4: Configurar o auto-capture
 
-Feche completamente o Claude Code e abra de novo. A skill precisa ser redescoberta.
+Para o Claude ativar o auto-study automaticamente, adicione uma instrucao no CLAUDE.md global.
 
-### Passo 4: Testar
+Abra (crie se nao existir):
 
-Abra qualquer projeto no Claude Code, inicie uma conversa e digite:
+```powershell
+notepad $HOME\.claude\CLAUDE.md
+```
+
+Adicione este conteudo:
+
+```markdown
+## Auto-capture de conhecimento
+
+Ao completar tarefas tecnicas significativas (resolver bugs, implementar features, configurar infraestrutura, fazer deploys), ative a skill `auto-study` para capturar conceitos e salvar no Obsidian automaticamente.
+
+Nao faca isso para tarefas triviais (typo fixes, renames, etc). Priorize momentos onde houve aprendizado real.
+```
+
+### Passo 5: Reiniciar o Claude Code
+
+Feche completamente o Claude Code e abra de novo. As skills precisam ser redescobertas.
+
+### Passo 6: Testar
+
+**Teste manual:** abra qualquer projeto no Claude Code e digite:
 
 ```
 /study
 ```
 
-Se a skill foi descoberta, ela vai aparecer no autocomplete quando você digitar `/s`.
+A skill vai aparecer no autocomplete quando voce digitar `/s`.
 
-A skill vai analisar a conversa, extrair conceitos e criar notas no Obsidian do PC de casa.
+**Teste automatico:** faca uma tarefa tecnica com o Claude (ex: criar uma funcao, resolver um bug). Ao completar, o Claude deve ativar o auto-study sozinho e salvar os conceitos no Obsidian.
 
-## Teste de conexão (opcional)
+## Teste de conexao (opcional)
 
 Para confirmar que o proxy funciona antes de usar a skill:
 
@@ -92,13 +126,23 @@ Deve retornar um JSON com `"files": [...]` listando as pastas do vault.
 ## Como funciona
 
 ```
-Este PC → /study skill → curl pro Worker → Worker adiciona API key do Obsidian
+Este PC → /study ou auto-study → curl pro Worker → Worker adiciona API key do Obsidian
 → repassa pro tunnel → tunnel entrega no Obsidian do PC de casa
 ```
 
-## Se não funcionar
+## Tags no Obsidian
 
-- **Tunnel pode estar down:** O tunnel roda no PC de casa. Se o PC reiniciou e o Obsidian ainda não abriu, o tunnel não conecta. O startup script deve resolver isso automaticamente.
-- **Skill não aparece:** Reinicie o Claude Code.
+| Tag | Significado |
+|---|---|
+| `#auto-capture` | Capturado automaticamente pelo Claude |
+| `#manual-capture` | Capturado manualmente via `/study` |
+
+No Obsidian, voce pode filtrar por tag para ver so o que foi auto-capturado ou so o que voce pediu manualmente.
+
+## Se nao funcionar
+
+- **Tunnel pode estar down:** O tunnel roda no PC de casa. Se o PC reiniciou e o Obsidian ainda nao abriu, o tunnel nao conecta. O startup script deve resolver isso automaticamente.
+- **Skill nao aparece:** Reinicie o Claude Code.
+- **Auto-capture nao dispara:** Verifique se o CLAUDE.md global tem a instrucao de auto-capture.
 - **Erro 401:** Verifique se o config tem `"proxy.enabled": true` e a apiKey correta.
-- **Erro 530:** Tunnel está down. PC de casa precisa estar com Obsidian aberto e tunnel rodando.
+- **Erro 530:** Tunnel esta down. PC de casa precisa estar com Obsidian aberto e tunnel rodando.

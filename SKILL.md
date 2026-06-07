@@ -131,7 +131,7 @@ Para cada conceito, crie ou atualize a nota em `Study/Concepts/<Nome do Conceito
 
 > Primeiro contato: <data de hoje>
 > Última atualização: <data de hoje>
-> Tags: #estudo #<categoria>
+> Tags: #estudo #manual-capture #<categoria>
 
 ## O que é (resumo simples)
 <explicação didática em 2-3 frases, com analogia>

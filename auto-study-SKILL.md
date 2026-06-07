@@ -46,7 +46,7 @@ Se nao existe no indice — crie nota em `Study/Concepts/<Nome>.md`:
 
 > Primeiro contato: <data>
 > Ultima atualizacao: <data>
-> Tags: #estudo #<categoria>
+> Tags: #estudo #auto-capture #<categoria>
 
 ## O que e (resumo simples)
 <2-3 frases com analogia>
