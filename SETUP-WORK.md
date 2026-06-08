@@ -1,8 +1,8 @@
-# Instruções de Configuração - PC do Trabalho
+# Instruções de Configuração - PC Remoto (trabalho, notebook, etc)
 
-## O que foi feito
+## Visão geral
 
-Foram criadas DUAS skills do Claude Code que geram notas de estudo no Obsidian do PC de casa:
+São DUAS skills do Claude Code que geram notas de estudo no Obsidian do PC principal (casa):
 
 | Skill | Como ativa | O que faz |
 |---|---|---|
@@ -11,7 +11,16 @@ Foram criadas DUAS skills do Claude Code que geram notas de estudo no Obsidian d
 
 No Obsidian, as notas geradas pela captura automatica tem a tag `#auto-capture`. As notas do `/study` manual tem a tag `#manual-capture`. Assim voce consegue filtrar no Obsidian o que foi capturado de cada forma.
 
-O acesso remoto funciona via Cloudflare Worker (proxy autenticado) + Cloudflare Tunnel.
+## Arquitetura
+
+```
+Este PC → skill /study ou auto-study → curl pro Worker
+→ Worker adiciona API key real do Obsidian
+→ repassa pro tunnel (obsidian.joaofvp.win)
+→ tunnel entrega no Obsidian do PC de casa
+```
+
+O tunnel é **estavel** — usa Cloudflare Named Tunnel com dominio proprio. Sobe automaticamente via Agendador de Tarefas quando o PC de casa liga. O dominio nunca muda.
 
 ## O que voce precisa fazer
 
@@ -47,7 +56,7 @@ notepad $HOME\.claude\obsidian-study-config.json
 
 Apague todo o conteudo e cole isso no lugar:
 
-```
+```json
 {
   "obsidian": {
     "baseUrl": "https://127.0.0.1:27124",
@@ -123,13 +132,6 @@ curl.exe -sk -H "Authorization: Bearer study-proxy-sk-6301b6c1a39a336d3ae6e4a5a1
 
 Deve retornar um JSON com `"files": [...]` listando as pastas do vault.
 
-## Como funciona
-
-```
-Este PC → /study ou auto-study → curl pro Worker → Worker adiciona API key do Obsidian
-→ repassa pro tunnel → tunnel entrega no Obsidian do PC de casa
-```
-
 ## Tags no Obsidian
 
 | Tag | Significado |
@@ -141,8 +143,8 @@ No Obsidian, voce pode filtrar por tag para ver so o que foi auto-capturado ou s
 
 ## Se nao funcionar
 
-- **Tunnel pode estar down:** O tunnel roda no PC de casa. Se o PC reiniciou e o Obsidian ainda nao abriu, o tunnel nao conecta. O startup script deve resolver isso automaticamente.
 - **Skill nao aparece:** Reinicie o Claude Code.
 - **Auto-capture nao dispara:** Verifique se o CLAUDE.md global tem a instrucao de auto-capture.
 - **Erro 401:** Verifique se o config tem `"proxy.enabled": true` e a apiKey correta.
-- **Erro 530:** Tunnel esta down. PC de casa precisa estar com Obsidian aberto e tunnel rodando.
+- **Erro 530 ou sem resposta:** O PC de casa precisa estar ligado com Obsidian aberto. O tunnel sobe automaticamente via Agendador de Tarefas do Windows.
+- **Erro de conexao geral:** Verifique se o PC de casa esta acessivel (obsidian.joaofvp.win responde).

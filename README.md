@@ -13,6 +13,8 @@ Ao digitar `/study` no Claude Code, a skill:
 5. Cria/atualiza o Daily Digest (resumo do dia com links)
 6. Atualiza o MOC (Map of Content) e o indice
 
+Tambem tem o **auto-study** — captura leve e automatica que roda sem intervencao ao completar tarefas tecnicas.
+
 ### Estrutura no Obsidian
 
 ```
@@ -24,28 +26,34 @@ Study/
   MOC - Mapa de Estudos.md  <- Mapa central
 ```
 
+### Tags
+
+| Tag | Significado |
+|---|---|
+| `#auto-capture` | Capturado automaticamente |
+| `#manual-capture` | Capturado via `/study` |
+
 ## Instalacao
 
-### Opcao 1: Clone + setup (recomendado)
+### Modo local (Obsidian no mesmo PC)
+
+Clone e rode o setup:
 
 ```bash
 git clone https://github.com/joaofvp/claude-study-skill.git
 cd claude-study-skill
-bash setup.sh
+bash setup.sh       # Linux/Mac
+.\setup.ps1         # Windows PowerShell
 ```
 
-No Windows PowerShell:
-```powershell
-git clone https://github.com/joaofvp/claude-study-skill.git
-cd claude-study-skill
-.\setup.ps1
-```
-
-### Opcao 2: Manual
-
+Ou manual:
 1. Copie `SKILL.md` para `~/.claude/skills/study/SKILL.md`
 2. Copie `obsidian-study-config.example.json` para `~/.claude/obsidian-study-config.json`
 3. Edite o config com sua API Key do Obsidian Local REST Plugin
+
+### Modo remoto (Obsidian em outro PC)
+
+Siga as instrucoes em [SETUP-WORK.md](SETUP-WORK.md).
 
 ## Requisitos
 
@@ -72,6 +80,23 @@ Ou com foco em um tema especifico:
 ```
 /study deploy
 /study APIs
+```
+
+## Auto-capture
+
+Para captura automatica, instale a skill `auto-study`:
+
+```bash
+mkdir -p ~/.claude/skills/auto-study
+cp auto-study-SKILL.md ~/.claude/skills/auto-study/SKILL.md
+```
+
+E adicione ao `~/.claude/CLAUDE.md`:
+
+```markdown
+## Auto-capture de conhecimento
+
+Ao completar tarefas tecnicas significativas, ative a skill `auto-study` para capturar conceitos automaticamente.
 ```
 
 ## Notas
